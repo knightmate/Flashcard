@@ -1,5 +1,6 @@
 import express from 'express';
 import mongoose from 'mongoose';
+import cors from 'cors';
 import {config} from "dotenv";
 config();
 
@@ -32,6 +33,7 @@ mongoose
 const app = express();
 
 app.use(express.json());
+app.use(cors('*'))
 
 // Create and save a new deck
 app.post("/deck", async (req, res) => {
@@ -53,6 +55,26 @@ app.post("/deck", async (req, res) => {
     }
 });
 
+// GET endpoint to fetch all decks
+app.get("/deck", async (req, res) => {
+    try {
+      // Fetch all decks from the database
+      const decks = await Deck.find();
+  
+      // Respond with decks as JSON
+      res.status(200).json({
+        success: true,
+        data: decks,
+      });
+    } catch (error) {
+      console.error("Error fetching decks:", error);
+      res.status(500).json({
+        success: false,
+        message: "Failed to fetch decks",
+        error: error.message,
+      });
+    }
+  });
 
 app.get('/', (req, res) => {
     console.log("Hi");
