@@ -1,10 +1,13 @@
 import express from 'express';
 import mongoose from 'mongoose';
+import {config} from "dotenv";
+
+config();
+
 // import  MongoClient = require('mongodb').MongoClient;
 // import  { MongoClient, ServerApiVersion }  from 'mongodb';
 import Deck from  "./models/Deck"
 
-const MONGO_URI = "mongodb+srv://systemauth:systemauth@cluster0.uu4bi.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
 // const client = new MongoClient(uri, {
@@ -15,9 +18,10 @@ const MONGO_URI = "mongodb+srv://systemauth:systemauth@cluster0.uu4bi.mongodb.ne
 //   }
 // });
 
+console.log("process.env",process.env)
 // Connect to MongoDB
 mongoose
-  .connect(MONGO_URI, {
+  .connect(process.env.MONGO_URI, {
     useNewUrlParser: true,      // Ensure new URL parser
     useUnifiedTopology: true,   // Use new Server Discovery engine
   })
@@ -28,13 +32,15 @@ mongoose
  
 const app = express();
 
+app.use(express.json());
 
 // Create and save a new deck
 app.post("/deck", async (req, res) => {
     try {
+       const {title}=req.body;
         // const deckData = createDeck();
         const newDeck = new Deck({
-            title: "FlashShipCard"
+            title: title
         });
         const savedDeck = await newDeck.save();
         res.status(201).json({
