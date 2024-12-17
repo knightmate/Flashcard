@@ -1,58 +1,57 @@
 import { useEffect, useState } from "react";
 import "./App.css";
 import Card from './component/card.tsx';
+import { Link } from "react-router-dom";
+import { getAllDecks ,deleteDeck,createDeck} from "./api/Deck.ts";
 
 function App() {
-  const [inputValue, setInputValue] = useState(""); // To track input value
+  const [inputValue, setInputValue] = useState("");
   const [responseMessage, setResponseMessage] = useState<string | null>(null);
   const [cards,setCards]=useState([]);
 
-  // Function to handle form submission
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+
+   useEffect(getAllDecks,[]);
+
+ 
+   const handleDelete = async (id: string) => {
+    try {
+       const deletedCard=await deleteDeck(id);
+       if(deletedCard){
+        setCards(cards.filter((card) => card._id !== deletedCard.id));
+       }
+ 
+    } catch (error) {
+      console.error("Error while deleting card:", error);
+    }
+  };
+
+   // Function to handle form submission
+   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault(); // Prevent page reload
 
     try {
-      
-      const response = await fetch("http://localhost:3000/deck", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ title: inputValue }),
-      });
-
-      setResponseMessage("Card Created"!)
-
-      
+        const createdDeck=await createDeck();
+        setCards([createdDeck,...cards])
     } catch (error) {
       console.error("Error:", error);
       setResponseMessage("Error occurred while adding data.");
     }
   };
 
-   useEffect(
-   ()=>{
-    fetchCards();
-    
-    
-   }
-    ,[]);
-
-  async function fetchCards(){
-
-    const response = await fetch("http://localhost:3000/deck", {
-      method: "GET",     
-     });
-     const {data}=await response.json();
-     setCards(data);
-
-    
-   };
-
-
   return (
     <div className="container">
       <h1>FlashCard Deck</h1>
+      <div style={{ textAlign: "center", marginTop: "2rem" }}>
+       <div style={styles.scrollContainer}>
+        {cards.map(({ title,_id}, index) => (
+          <div key={index} style={styles.cardWrapper}>
+           <Link to={`/deck/${_id}`}>
+            <Card onDelete={()=>handleDelete(_id)} title={title} />
+            </Link>
+          </div>
+        ))}
+      </div>
+    </div>
       <form onSubmit={handleSubmit} className="form">
         <input
           type="text"
@@ -63,17 +62,7 @@ function App() {
         />
         <button type="submit">Submit</button>
       </form>
-      <div style={{ textAlign: "center", marginTop: "2rem" }}>
-      <h1>Horizontal Scroll Cards</h1>
-      {/* Horizontal Scroll Container */}
-      <div style={styles.scrollContainer}>
-        {cards.map(({ title }, index) => (
-          <div key={index} style={styles.cardWrapper}>
-            <Card title={title} />
-          </div>
-        ))}
-      </div>
-    </div>
+     
       {responseMessage && <p className="response">{responseMessage}</p>}
     </div>
   );
@@ -81,8 +70,9 @@ function App() {
 
 const styles = {
   scrollContainer: {
-    maxHeight:'300px',
-    overflowX: "auto", // Enable horizontal scroll
+    display:"flex",
+    maxWidth:'500px',
+    overflowX: "scroll", // Enable horizontal scroll
     whiteSpace: "nowrap", // Prevent wrapping
     gap: "1rem", // Add space between cards
     padding: "1rem",
