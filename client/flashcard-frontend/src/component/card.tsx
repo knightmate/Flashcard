@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 // Define props for the Card component
 interface CardProps {
@@ -7,10 +8,13 @@ interface CardProps {
 }
 
 // Card Component
-const Card: React.FC<CardProps> = ({ title, onDelete }) => {
+const Card: React.FC<CardProps> = ({ title, onDelete ,id}) => {
   return (
     <div style={styles.cardContainer}>
+    <Link to={`/deck/${id}`}>
       <h2 style={styles.cardTitle}>{title}</h2>
+      </Link>
+      
       <button style={styles.deleteButton} onClick={onDelete}>
         Delete
       </button>

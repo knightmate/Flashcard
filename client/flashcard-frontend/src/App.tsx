@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import "./App.css";
 import Card from './component/card.tsx';
-import { Link } from "react-router-dom";
 import { getAllDecks ,deleteDeck,createDeck} from "./api/Deck.ts";
 
 function App() {
@@ -10,14 +9,22 @@ function App() {
   const [cards,setCards]=useState([]);
 
 
-   useEffect(getAllDecks,[]);
+   useEffect(()=>{
+    fetchDeck()
+   },[]);
 
  
+   const fetchDeck=async ()=>{
+     
+     const decks=await getAllDecks();
+     setCards(decks);
+
+   }
    const handleDelete = async (id: string) => {
     try {
-       const deletedCard=await deleteDeck(id);
-       if(deletedCard){
-        setCards(cards.filter((card) => card._id !== deletedCard.id));
+       const isCardDelete=await deleteDeck(id);
+       if(isCardDelete){
+        setCards(cards.filter((card) => card._id !== id));
        }
  
     } catch (error) {
@@ -30,7 +37,7 @@ function App() {
     e.preventDefault(); // Prevent page reload
 
     try {
-        const createdDeck=await createDeck();
+        const createdDeck=await createDeck(inputValue);
         setCards([createdDeck,...cards])
     } catch (error) {
       console.error("Error:", error);
@@ -45,9 +52,7 @@ function App() {
        <div style={styles.scrollContainer}>
         {cards.map(({ title,_id}, index) => (
           <div key={index} style={styles.cardWrapper}>
-           <Link to={`/deck/${_id}`}>
-            <Card onDelete={()=>handleDelete(_id)} title={title} />
-            </Link>
+             <Card id={_id} onDelete={()=>handleDelete(_id)} title={title} />
           </div>
         ))}
       </div>
