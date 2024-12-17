@@ -1,7 +1,6 @@
 import express from 'express';
 import mongoose from 'mongoose';
 import {config} from "dotenv";
-
 config();
 
 // import  MongoClient = require('mongodb').MongoClient;
@@ -18,7 +17,7 @@ import Deck from  "./models/Deck"
 //   }
 // });
 
-console.log("process.env",process.env)
+console.log("process.env",process.env.MY_VARIABLE)
 // Connect to MongoDB
 mongoose
   .connect(process.env.MONGO_URI, {
