@@ -18,6 +18,37 @@ export const getAllDecks = async (req, res) => {
   }
 };
 
+export const getDeck = async (req, res) => {
+  try {
+    const { deckId } = req.params; // Extract the deck ID from URL parameters
+
+    // Find the deck by ID
+    const deck = await Deck.findById(deckId);
+
+    // If the deck is not found, return a 404 response
+    if (!deck) {
+      return res.status(404).json({
+        success: false,
+        message: `Deck with ID ${deckId} not found.`,
+      });
+    }
+
+    // Respond with the deck data
+    res.status(200).json({
+      success: true,
+      data: deck,
+    });
+  } catch (error) {
+    console.error("Error fetching deck:", error);
+    res.status(500).json({
+      success: false,
+      message: "Failed to fetch deck",
+      error: error.message,
+    });
+  }
+};
+
+
 // Delete a deck by ID
 export const deleteDeckById = async (req, res) => {
   const { id } = req.params;

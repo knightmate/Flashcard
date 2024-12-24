@@ -7,7 +7,7 @@ config();
 // import  MongoClient = require('mongodb').MongoClient;
 // import  { MongoClient, ServerApiVersion }  from 'mongodb';
 import Deck from  "./models/Deck"
-import {getAllDecks,deleteDeckById,createDeck,createDeckCard,deleteDeckCard} from './controllers/index';
+import {getAllDecks,deleteDeckById,createDeck,createDeckCard,deleteDeckCard,getDeck} from './controllers/index';
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
 // const client = new MongoClient(uri, {
@@ -50,6 +50,8 @@ app.post("/deck", createDeck);
 app.post("/deck/:deckId/card", createDeckCard);
 //Delete Deck Card
 app.delete("/deck/:deckId/:index", deleteDeckCard);
+
+app.get("/deck/:deckId", getDeck);
 
 // Route to fetch all decks
 app.get("/deck", getAllDecks);
