@@ -5,7 +5,7 @@ const BASE_URL = import.meta.env.VITE_BASE_URL;
 export const getAllDecks = async () => {
   try {
     console.log("BASE_URL:", BASE_URL,import.meta.env);
-    const response = await fetch(BASE_URL, { method: "GET" });
+    const response = await fetch("https://flashcard-production-f30c.up.railway.app/deck", { method: "GET" });
     if (!response.ok) throw new Error("Failed to fetch decks");
     const { data } = await response.json();
     return data;
