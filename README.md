@@ -1,2 +1,2 @@
 # Flashcard
-https://flashcard.up.railway.app/deck 
+https://flashcard.up.railway.app
