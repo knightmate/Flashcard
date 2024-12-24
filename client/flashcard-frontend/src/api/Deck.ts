@@ -1,4 +1,4 @@
-const BASE_URL = "http://localhost:3000/deck";
+const BASE_URL = "flashcard-production-f30c.up.railway.app/deck";
 
 // Fetch all decks
 export const getAllDecks = async () => {
