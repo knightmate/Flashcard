@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-
+ 
 // Define the deck structure
 interface Deck {
   title: string;
@@ -13,13 +13,14 @@ export default function Deck() {
   const [loading, setLoading] = useState<boolean>(true); // Loading state
   const [error, setError] = useState<string | null>(null); // Error state
   const [newCard, setNewCard] = useState<string>(""); // State for the new card input
+  const BASE_URL = import.meta.env.VITE_BASE_URL;
 
   // Fetch the deck details when the component mounts
   useEffect(() => {
     const fetchDeckCards = async () => {
       try {
         setLoading(true);
-        const response = await fetch(`http://localhost:3000/deck/${id}`);
+        const response = await fetch(`${BASE_URL}/${id}`);
         if (!response.ok) {
           throw new Error(`Failed to fetch deck with ID: ${id}`);
         }
@@ -43,7 +44,7 @@ export default function Deck() {
     }
 
     try {
-      const response = await fetch(`http://localhost:3000/deck/${id}/card`, {
+      const response = await fetch(`${BASE_URL}/${id}/card`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -65,7 +66,7 @@ export default function Deck() {
 
   const handleDelete = async (deckId, cardIndex) => {
     try {
-      const response = await fetch(`http://localhost:3000/deck/${deckId}/${cardIndex}/`, {
+      const response = await fetch(`${BASE_URL}/${deckId}/${cardIndex}/`, {
         method: "DELETE",
       });
   
